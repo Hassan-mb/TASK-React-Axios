@@ -1,7 +1,12 @@
-import React from "react";
-import petsData from "../petsData";
+import React, { useState } from "react";
+import { getOnePets } from "../API/Pets";
 const PetDetail = () => {
-  const pet = petsData[0];
+  const [petID, setPetID] = useState([]);
+  const getPetById = async () => {
+    const resault = await getOnePets(147);
+    return setPetID(resault);
+  };
+  const pet = petID;
   return (
     <div className="bg-[#F9E3BE] w-screen h-[100vh] flex justify-center items-center">
       <div className="border border-black rounded-md w-[70%] h-[70%] overflow-hidden flex flex-col md:flex-row p-5">
@@ -24,6 +29,8 @@ const PetDetail = () => {
           <button className="w-[70px] border border-black rounded-md  hover:bg-red-400">
             Delete
           </button>
+
+          <button onClick={getPetById}>get by id</button>
         </div>
       </div>
     </div>
