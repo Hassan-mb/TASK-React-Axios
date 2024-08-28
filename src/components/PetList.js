@@ -2,22 +2,25 @@ import React, { useState, useSyncExternalStore } from "react";
 import PetItem from "./PetItem";
 import Modal from "./Modal";
 import { getAllPets } from "../API/Pets";
+import { useQuery } from "@tanstack/react-query";
+import Navbar from "./Navbar";
 
 const PetList = () => {
   const [query, setQuery] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [pets, setPets] = useState([]);
 
-  const getPets = async () => {
-    const resault = await getAllPets();
-    return setPets(resault);
-  };
+  const { data } = useQuery({
+    queryKey: ["getAllPets"],
+    queryFn: getAllPets,
+  });
 
-  const petList = pets
-    .filter((pet) => pet.name.toLowerCase().includes(query.toLowerCase()))
+  const petList = data
+    ?.filter((pet) => pet.name.toLowerCase().includes(query.toLowerCase()))
     .map((pet) => <PetItem pet={pet} key={pet.id} />);
   return (
     <>
+      <Navbar />
       <div className="bg-[#F9E3BE] flex flex-col justify-center items-center ">
         <div className="w-[76vw] flex h-[30px] mb-[30px] mt-[30px]">
           <input
@@ -35,7 +38,6 @@ const PetList = () => {
           >
             Add pet
           </button>
-          <button onClick={getPets}>get all pets</button>
         </div>
         <div className=" flex flex-col flex-wrap md:flex-row gap-[20px] w-[76vw]  justify-center items-center mb-[50px]">
           {petList}
